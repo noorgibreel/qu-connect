@@ -243,7 +243,27 @@ export default function AppShell() {
         }
       }
     } catch (e) {
-      console.error("Error loading user profile details from Supabase:", e);
+      console.error("Error loading user profile details from Supabase, falling back to local:", e);
+      let localProfile = null;
+      if (typeof window !== "undefined") {
+        try {
+          const saved = localStorage.getItem(`qu_connect_profile_${userId}`);
+          if (saved) {
+            localProfile = JSON.parse(saved);
+          }
+        } catch (err) {}
+      }
+
+      if (localProfile) {
+        setUser(localProfile);
+        setScreen(userId.startsWith('demo-') ? 4 : 10);
+      } else {
+        setUser(prev => ({
+          ...prev,
+          id: userId
+        }));
+        setScreen(4); // Navigate to step 1 onboarding
+      }
     }
   };
 
