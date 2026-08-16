@@ -122,6 +122,50 @@ export default function AppShell() {
 
   // Function to load all user metadata and profile dynamically
   const loadAllData = async (userId: string) => {
+    if (userId.startsWith('demo-')) {
+      let localProfile: Student | null = null;
+      if (typeof window !== "undefined") {
+        try {
+          const saved = localStorage.getItem(`qu_connect_profile_${userId}`);
+          if (saved) {
+            localProfile = JSON.parse(saved);
+          }
+        } catch (e) {}
+      }
+
+      if (localProfile) {
+        setUser(localProfile);
+        const isComplete = (localProfile.interests || []).length > 0 && (localProfile.goals || []).length > 0;
+        setScreen(isComplete ? 10 : 4);
+      } else {
+        const isMale = !userId.includes("female");
+        const cleanId = userId.replace('demo-', '');
+        const defaultDemo: Student = {
+          id: userId,
+          studentId: cleanId,
+          displayName: "",
+          gender: isMale ? "male" : "female",
+          college: "",
+          major: "",
+          level: 6,
+          interests: [],
+          goals: [],
+          personality: [],
+          communicationPref: "",
+          bio: "",
+          avatar: isMale ? "👨‍💻" : "👩‍💻"
+        };
+        setUser(defaultDemo);
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem(`qu_connect_profile_${userId}`, JSON.stringify(defaultDemo));
+          } catch (e) {}
+        }
+        setScreen(4); // Go to step 1 onboarding
+      }
+      return;
+    }
+
     try {
       const { data: cols } = await supabase.from('colleges').select('*');
       const { data: majs } = await supabase.from('majors').select('*');
