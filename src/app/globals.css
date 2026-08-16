@@ -1,26 +1,424 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Exact colors from the provided design screenshots */
+  --primary: #023422; /* Very dark green forest color */
+  --primary-hover: #012216;
+  --primary-light: #e6eee9;
+  --primary-dark: #00120b;
+  --primary-rgb: 2, 52, 34;
+
+  --background: #f4f8f6; /* Very light mint-green/white backdrop */
+  --foreground: #0f291e; /* Forest grey/black text color */
+  --card-background: #ffffff;
+  --bg-shade: #f8faf9;
+  --border-color: #e2e8f0;
+  --muted-text: #64748b;
+
+  /* Default Accents (Shared Theme) */
+  --accent: #023422;
+  --accent-hover: #012216;
+  --accent-light: #e6eee9;
+  --accent-rgb: 2, 52, 34;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.05);
+
+  --font-cairo: var(--font-cairo);
+  --font-sans: "Sakkal Majalla", var(--font-cairo), system-ui, -apple-system, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Male Theme Accents */
+.theme-male {
+  --accent: #1e40af; /* Deep Academic Blue */
+  --accent-hover: #1e3a8a;
+  --accent-light: #dbeafe;
+  --accent-rgb: 30, 64, 175;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Female Theme Accents */
+.theme-female {
+  --accent: #be185d; /* Elegant Deep Pink */
+  --accent-hover: #9d174d;
+  --accent-light: #fce7f3;
+  --accent-rgb: 190, 24, 93;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Sakkal Majalla", var(--font-cairo), system-ui, -apple-system, sans-serif !important;
 }
 
 body {
-  background: var(--background);
+  background-color: #0c1411; /* Dark forest green outside screen backdrop for desktop view */
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
+
+/* Mobile Viewport Simulation Container */
+.phone-container {
+  width: 100%;
+  max-width: 430px; /* Standard premium mobile screen ratio */
+  height: 100vh;
+  max-height: 900px;
+  background-color: var(--background);
+  border-radius: 40px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+  border: 10px solid #1a221f; /* Smooth thin bezel */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dynamic status bar style */
+.phone-notch {
+  width: 120px;
+  height: 24px;
+  background-color: #1a221f;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+/* Fill screen on true mobile viewport sizes */
+@media (max-width: 480px) {
+  body {
+    background-color: var(--background);
+    align-items: stretch;
+  }
+  .phone-container {
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .phone-notch {
+    display: none;
+  }
+}
+
+/* Buttons from design layout */
+.qu-btn-primary {
+  background-color: var(--primary);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.qu-btn-primary:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 4px 14px rgba(2, 52, 34, 0.2);
+}
+.qu-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.qu-btn-accent {
+  background-color: var(--accent);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.qu-btn-accent:hover {
+  background-color: var(--accent-hover);
+  box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.2);
+}
+.qu-btn-accent:active {
+  transform: scale(0.98);
+}
+
+.qu-btn-secondary {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+  padding: 12px 28px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.qu-btn-secondary:hover {
+  background-color: var(--primary-light);
+}
+
+/* Input Fields styling matching the screenshots */
+.qu-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.qu-input {
+  width: 100%;
+  padding: 14px 16px 14px 44px; /* Space for left icon/arrow */
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+  background-color: var(--bg-shade);
+  color: var(--foreground);
+  text-align: right;
+}
+.qu-input::placeholder {
+  color: #a0aec0;
+}
+.qu-input:focus {
+  border-color: var(--primary);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(2, 52, 34, 0.08);
+}
+
+/* Select inputs with custom arrow and icon */
+.qu-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+.qu-select {
+  width: 100%;
+  padding: 14px 44px 14px 16px; /* Space for right icon & left arrow */
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
+  background-color: var(--bg-shade);
+  color: var(--foreground);
+  appearance: none;
+  text-align: right;
+  cursor: pointer;
+}
+.qu-select:focus {
+  border-color: var(--primary);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(2, 52, 34, 0.08);
+}
+
+/* Selected language box items */
+.lang-box {
+  border: 1.5px solid var(--border-color);
+  background-color: var(--card-background);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.lang-box.selected {
+  border-color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+/* Card deck layout */
+.card-deck {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  perspective: 1000px;
+}
+.match-card {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-text);
+}
+
+/* Match Success Modal Styling */
+.qu-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(2, 52, 34, 0.9);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.qu-modal-content {
+  width: 90%;
+  max-width: 360px;
+  background: radial-gradient(circle at center, #023422 0%, #00120b 100%);
+  border-radius: 32px;
+  border: 1.5px solid rgba(230, 238, 233, 0.15);
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  animation: scaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.match-avatars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 24px 0;
+  position: relative;
+}
+
+.avatar-match-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: white;
+  border: 4px solid var(--accent);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 2;
+  animation: floatAvatarLeft 3s ease-in-out infinite alternate;
+}
+
+.avatar-match-circle:first-child {
+  animation: floatAvatarRight 3s ease-in-out infinite alternate;
+}
+
+.match-heart {
+  font-size: 1.8rem;
+  background: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  margin: 0 -15px;
+  z-index: 3;
+  animation: heartPulse 1.2s ease-in-out infinite;
+}
+
+/* Typing Indicator Styling */
+.typing-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  border-top-left-radius: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--muted-text);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.typing-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes floatAvatarLeft {
+  0% { transform: translateY(0) translateX(5px); }
+  100% { transform: translateY(-5px) translateX(-5px); }
+}
+
+@keyframes floatAvatarRight {
+  0% { transform: translateY(0) translateX(-5px); }
+  100% { transform: translateY(-5px) translateX(5px); }
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
